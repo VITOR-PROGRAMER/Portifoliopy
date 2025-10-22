@@ -1,0 +1,485 @@
+:root {
+  --fg: #fff;
+  --fg-dim: #d7dbff;
+  --accent: #7c4dff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--fg);
+  overflow-x: hidden;
+}
+
+/* Fundo */
+.bg {
+  position: fixed;
+  inset: 0;
+  background-image: url("../imagens/web.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(1200px 700px at 30% 30%, rgba(0, 0, 0, .25), rgba(0, 0, 0, .72) 60%, rgba(0, 0, 0, .85));
+  z-index: -1;
+}
+
+/* Frames laterais */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: linear-gradient(to bottom, rgba(124, 77, 255, 0.6), rgba(124, 77, 255, 0.15));
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(124, 77, 255, 0.4);
+  z-index: 5;
+}
+
+body::before {
+  left: 0;
+}
+
+body::after {
+  right: 0;
+}
+
+/* Navbar fixa */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.25);
+  /* opcional: dá contraste sobre o fundo */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+}
+
+.nav a {
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .95rem;
+  padding: 8px 12px;
+  border-radius: 999px;
+  transition: .2s ease;
+}
+
+.nav a:hover {
+  color: var(--fg);
+  background: rgba(255, 255, 255, .08);
+}
+
+.nav a.active {
+  color: #111;
+  background: var(--fg);
+}
+
+/* Seções base */
+.section {
+  width: min(1200px, 94vw);
+  margin: 0 auto;
+  padding: 35px 0;
+}
+
+/* Hero */
+.hero {
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+}
+
+.hero .title {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+  font-size: clamp(28px, 5.2vw, 64px);
+  text-shadow: 0 0 14px rgba(255, 255, 255, .18);
+}
+
+.hero .subtitle {
+  margin: 0 0 24px 0;
+  color: var(--fg-dim);
+}
+
+.cta {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  background: var(--fg);
+  color: #111;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: .2s ease;
+}
+
+.cta:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent-color, var(--accent)) 70%, transparent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+}
+
+/* Cabeçalho da seção */
+.sec-head h2 {
+  margin: 0 0 4px 0;
+  font-size: clamp(22px, 3.6vw, 38px);
+}
+
+.sec-head p {
+  margin: 0 0 18px 0;
+  color: var(--fg-dim);
+}
+
+/* GRID cards */
+/* ===== Grid de projetos (cards grandes) com scroll na área ===== */
+.proj-grid {
+  --cols: 3;
+  /* desktop: 3 colunas (como no print) */
+  --gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: var(--gap);
+  margin-top: 12px;
+
+  /* área rolável — mantém o cabeçalho da seção visível */
+  max-height: 70vh;
+  /* ajuste se quiser mais/menos alto */
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+}
+
+.proj-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.proj-grid::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent-color) 40%, transparent);
+  border-radius: 999px;
+}
+
+/* responsivo */
+@media (max-width: 580px) {
+  .proj-grid {
+    --cols: 2;
+  }
+}
+
+@media (max-width: 660px) {
+  .proj-grid {
+    --cols: 1;
+  }
+}
+
+/* Card + cores dinâmicas */
+/* Lista de projetos dentro do card */
+/* ====== PROJETOS EM GRADE, 5x3 VISÍVEIS ====== */
+.card .projects {
+  grid-area: list;
+  --proj-cols: 5;
+  /* desktop: 5 colunas */
+  --proj-row-h: 34px;
+  /* altura-base por linha */
+  display: grid;
+  grid-template-columns: repeat(var(--proj-cols), 1fr);
+  gap: 6px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+
+  /* 3 linhas visíveis (scroll se passar) */
+  max-height: calc((var(--proj-row-h) + 12px) * 3);
+  /* 3 linhas + padding interno */
+  overflow-y: auto;
+  padding-right: 4px;
+  /* espaço pro scrollbar não cobrir texto */
+  scrollbar-width: thin;
+}
+
+.card .projects::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card .projects::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent-color) 40%, transparent);
+  border-radius: 999px;
+}
+
+@media (max-width: 520px) {
+  .card .projects {
+    --proj-cols: 3;
+  }
+
+  /* celular: 3 colunas, continua 3 linhas => 15 itens visíveis */
+}
+
+.card .projects li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  min-height: var(--proj-row-h);
+  font-size: 0.86rem;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 40%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+  border-radius: 10px;
+  backdrop-filter: blur(3px);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* bolinha */
+.card .projects li::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent-color) 60%, transparent);
+}
+
+/* botão opcional, ocupa a linha toda */
+.card .show-more {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 50%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 16%, transparent);
+  color: var(--fg);
+  cursor: pointer;
+  transition: .15s ease;
+  font-size: 0.86rem;
+}
+
+.card .show-more:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.185);
+  border: 2px solid var(--accent-color, rgba(255, 255, 255, 0.10));
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
+  transition: all 0.25s ease;
+}
+
+.card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .8));
+}
+
+.card h3 {
+  margin: 2px 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.card .count {
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: .95rem;
+}
+
+.card:hover {
+  transform: translateY(-2px) scale(1.01);
+  background: color-mix(in srgb, var(--accent-color) 28%, transparent);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-color) 40%, transparent);
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Contato */
+.contact-form {
+  display: grid;
+  gap: 12px;
+  max-width: 680px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, .08);
+  color: var(--fg);
+  outline: none;
+}
+
+.contact-form button {
+  justify-self: start;
+}
+
+/* Acentos por seção (fallback dos cards) */
+.section.skill {
+  border-left: 3px solid color-mix(in srgb, var(--accent-color) 50%, transparent);
+  padding-left: 20px;
+  border-radius: 8px;
+}
+
+/* ===== Card de projeto (grande) ===== */
+.proj-card {
+  background: rgba(255, 255, 255, 0.10);
+  border: 2px solid var(--accent-color, rgba(255, 255, 255, 0.10));
+  border-radius: 14px;
+  min-height: 205px;
+  padding: 18px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  /* título | conteúdo | ações */
+  gap: 10px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .30);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.proj-card:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--accent-color) 20%, transparent);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-color) 38%, transparent);
+}
+
+/* título do projeto */
+.proj-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .3px;
+}
+
+/* info secundária (opcional) */
+.proj-meta {
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: .86rem;
+  opacity: .9;
+  line-height: 1.35;
+}
+
+/* rodapé do card (botões) */
+.proj-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.proj-open {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 60%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 22%, transparent);
+  color: var(--fg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.proj-open:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+/* contagem discreta no título da seção (opcional) */
+.sec-head .count-inline {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 60%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 14%, transparent);
+  font-size: .85rem;
+}
+
+/* transição suave ao trocar a ativa (opcional) */
+section[id] {
+  transition: opacity .25s ease;
+}
+
+/* reduz altura mínima dos proj-card em celulares */
+@media (max-width: 520px) {
+  .proj-card {
+    min-height: 120px;
+    /* antes 205px — ajuste se quiser menor */
+    padding: 12px;
+  }
+
+  .proj-card .proj-title {
+    font-size: 0.95rem;
+  }
+
+  .proj-card .proj-meta {
+    font-size: 0.82rem;
+  }
+
+  .card img {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Usa a variável --topbar-h definida pelo JS para garantir que o scroll automático e ancoragem fique certinha */
+html {
+  /* fallback: 78px caso a var não exista ainda */
+  scroll-padding-top: var(--topbar-h, 78px);
+}
+
+/* cada section que serve como âncora ganha uma margem de scroll para encaixar abaixo da navbar */
+section[id] {
+  scroll-margin-top: calc(var(--topbar-h, 78px) + 4px);
+  /* +4px de folga opcional */
+}

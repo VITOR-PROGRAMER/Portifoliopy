@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfólio</title>
+    <style>
+:root{
+  --fg: #fff;
+  --fg-dim: #d7dbff;
+  --accent: #7c4dff;
+}
+
+*{ box-sizing: border-box; }
+html, body { height:100%; scroll-behavior: smooth; }
+body{
+  margin:0;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--fg);
+  overflow-x: hidden;
+}
+
+/* Fundo */
+.bg{
+  position: fixed; inset: 0;
+  background-image: url("../imagens/web.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+.scrim{
+  position: fixed; inset: 0;
+  background: radial-gradient(1200px 700px at 30% 30%, rgba(0,0,0,.25), rgba(0,0,0,.72) 60%, rgba(0,0,0,.85));
+  z-index: -1;
+}
+
+/* Frames laterais */
+body::before,
+body::after{
+  content:"";
+  position: fixed;
+  top:0; bottom:0;
+  width:10px;
+  background: linear-gradient(to bottom, rgba(124,77,255,0.6), rgba(124,77,255,0.15));
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(124,77,255,0.4);
+  z-index: 5;
+}
+body::before{ left:0; }
+body::after{ right:0; }
+
+/* Navbar fixa */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.25); /* opcional: dá contraste sobre o fundo */
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav{
+  max-width: 1200px; margin: 0 auto;
+  display: flex; gap: 14px; align-items: center; justify-content: center;
+  padding: 10px 16px;
+}
+.nav a{
+  color: var(--fg-dim); text-decoration: none; font-weight: 600; font-size: .95rem;
+  padding: 8px 12px; border-radius: 999px;
+  transition: .2s ease;
+}
+.nav a:hover{ color: var(--fg); background: rgba(255,255,255,.08); }
+.nav a.active{
+  color: #111; background: var(--fg);
+}
+
+/* Seções base */
+.section{
+  width: min(1200px, 94vw);
+  margin: 0 auto; padding: 35px 0;
+}
+
+/* Hero */
+.hero{
+  display: grid; place-items: center; min-height: 70vh;
+}
+.hero .title{
+  margin: 0 0 6px 0;
+  font-weight: 700; font-size: clamp(28px, 5.2vw, 64px);
+  text-shadow: 0 0 14px rgba(255,255,255,.18);
+}
+.hero .subtitle{ margin: 0 0 24px 0; color: var(--fg-dim); }
+.cta{
+  display: inline-block;
+  padding: 12px 18px; border-radius: 12px; font-weight: 700;
+  background: var(--fg); color: #111; text-decoration: none;
+  border: 2px solid transparent;
+  transition: .2s ease;
+}
+.cta:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent-color, var(--accent)) 70%, transparent);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+
+/* Cabeçalho da seção */
+.sec-head h2{
+  margin: 0 0 4px 0; font-size: clamp(22px, 3.6vw, 38px);
+}
+.sec-head p{ margin: 0 0 18px 0; color: var(--fg-dim); }
+
+/* GRID cards */
+/* ===== Grid de projetos (cards grandes) com scroll na área ===== */
+.proj-grid{
+  --cols: 3;                 /* desktop: 3 colunas (como no print) */
+  --gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: var(--gap);
+  margin-top: 12px;
+
+  /* área rolável — mantém o cabeçalho da seção visível */
+  max-height: 70vh;          /* ajuste se quiser mais/menos alto */
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+}
+.proj-grid::-webkit-scrollbar{ width: 8px; }
+.proj-grid::-webkit-scrollbar-thumb{
+  background: color-mix(in srgb, var(--accent-color) 40%, transparent);
+  border-radius: 999px;
+}
+
+/* responsivo */
+@media (max-width: 580px){ .proj-grid { --cols: 2; } }
+@media (max-width: 660px){ .proj-grid { --cols: 1; } }
+
+/* Card + cores dinâmicas */
+/* Lista de projetos dentro do card */
+/* ====== PROJETOS EM GRADE, 5x3 VISÍVEIS ====== */
+.card .projects{
+  grid-area: list;
+  --proj-cols: 5;                 /* desktop: 5 colunas */
+  --proj-row-h: 34px;             /* altura-base por linha */
+  display: grid;
+  grid-template-columns: repeat(var(--proj-cols), 1fr);
+  gap: 6px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+
+  /* 3 linhas visíveis (scroll se passar) */
+  max-height: calc((var(--proj-row-h) + 12px) * 3); /* 3 linhas + padding interno */
+  overflow-y: auto;
+  padding-right: 4px;            /* espaço pro scrollbar não cobrir texto */
+  scrollbar-width: thin;
+}
+.card .projects::-webkit-scrollbar{ width: 6px; }
+.card .projects::-webkit-scrollbar-thumb{
+  background: color-mix(in srgb, var(--accent-color) 40%, transparent);
+  border-radius: 999px;
+}
+
+@media (max-width: 520px){
+  .card .projects{ --proj-cols: 3; }  /* celular: 3 colunas, continua 3 linhas => 15 itens visíveis */
+}
+
+.card .projects li{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  min-height: var(--proj-row-h);
+  font-size: 0.86rem;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 40%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+  border-radius: 10px;
+  backdrop-filter: blur(3px);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* bolinha */
+.card .projects li::before{
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent-color) 60%, transparent);
+}
+
+/* botão opcional, ocupa a linha toda */
+.card .show-more{
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 50%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 16%, transparent);
+  color: var(--fg);
+  cursor: pointer;
+  transition: .15s ease;
+  font-size: 0.86rem;
+}
+.card .show-more:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+}
+
+.card{
+  background: rgba(255, 255, 255, 0.185);
+  border: 2px solid var(--accent-color, rgba(255,255,255,0.10));
+  border-radius: 16px;
+  padding: 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  transition: all 0.25s ease;
+}
+.card img{
+  width: 72px; height: 72px; object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.8));
+}
+.card h3{ margin: 2px 0 0; font-size: 1.05rem; font-weight: 700; letter-spacing: .2px; }
+.card .count{ margin: 0; color: var(--fg-dim); font-size: .95rem; }
+
+.card:hover{
+  transform: translateY(-2px) scale(1.01);
+  background: color-mix(in srgb, var(--accent-color) 28%, transparent);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-color) 40%, transparent);
+}
+
+/* Reveal on scroll */
+.reveal{
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.show{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Contato */
+.contact-form{
+  display: grid; gap: 12px; max-width: 680px;
+}
+.contact-form input,
+.contact-form textarea{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08);
+  color: var(--fg);
+  outline: none;
+}
+.contact-form button{
+  justify-self: start;
+}
+
+/* Acentos por seção (fallback dos cards) */
+.section.skill{ border-left: 3px solid color-mix(in srgb, var(--accent-color) 50%, transparent); padding-left: 20px; border-radius: 8px; }
+/* ===== Card de projeto (grande) ===== */
+.proj-card{
+  background: rgba(255,255,255,0.10);
+  border: 2px solid var(--accent-color, rgba(255,255,255,0.10));
+  border-radius: 14px;
+  min-height: 205px;
+  padding: 18px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;  /* título | conteúdo | ações */
+  gap: 10px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.30);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+}
+.proj-card:hover{
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--accent-color) 20%, transparent);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-color) 38%, transparent);
+}
+
+/* título do projeto */
+.proj-title{
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .3px;
+}
+
+/* info secundária (opcional) */
+.proj-meta{
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: .86rem;
+  opacity: .9;
+  line-height: 1.35;
+}
+
+/* rodapé do card (botões) */
+.proj-actions{
+  display: flex; gap: 10px; align-items: center;
+}
+.proj-open{
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 60%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 22%, transparent);
+  color: var(--fg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+}
+.proj-open:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+}
+
+/* contagem discreta no título da seção (opcional) */
+.sec-head .count-inline{
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 60%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 14%, transparent);
+  font-size: .85rem;
+}
+
+</style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Fundo e scrim -->
+    <div class="bg"></div>
+    <div class="scrim"></div>
+
+    <!-- Navbar fixa -->
+    <header class="topbar">
+        <nav class="nav">
+            <a href="#hero">Início</a>
+            <a href="#excel">Excel</a>
+            <a href="#powerbi">Power BI</a>
+            <a href="#vba">VBA</a>
+            <a href="#sql">SQL</a>
+            <a href="#java">Java</a>
+            <a href="#python">Python</a>
+            <a href="#ia">IA</a>
+            <a href="#redes">Redes</a>
+            <a href="#process">Processos</a>
+            <a href="#contato">Contato</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- 1) HERO -->
+        <section id="hero" class="section hero reveal" style="--accent-color:#7c4dff">
+            <div class="hero-inner">
+                <h1 class="title">MINHAS SKILLS</h1>
+                <p class="subtitle">Portfólio interativo com projetos reais e animações suaves.</p>
+                <a class="cta" href="#excel">Ver projetos</a>
+            </div>
+        </section>
+
+        <!-- 2) EXCEL -->
+        <section id="excel" class="section skill reveal" style="--accent-color:#00ff62">
+            <header class="sec-head">
+                <h2>Excel</h2>
+                <p>Dashboards, Tabelas Dinâmicas, Macros e Automação.</p>
+            </header>
+            <div class="proj-grid" data-skill="excel"></div>
+        </section>
+
+        <!-- 3) POWER BI -->
+        <section id="powerbi" class="section skill reveal" style="--accent-color:#f2c811">
+            <header class="sec-head">
+                <h2>Power BI</h2>
+                <p>Modelagem, DAX, relatórios interativos e storytelling.</p>
+            </header>
+            <div class="proj-grid" data-skill="powerbi"></div>
+        </section>
+
+        <!-- 4) VBA -->
+        <section id="vba" class="section skill reveal" style="--accent-color:#9000f0">
+            <header class="sec-head">
+                <h2>VBA</h2>
+                <p>UserForms, ETL leve, geração de relatórios, integração.</p>
+            </header>
+            <div class="proj-grid" data-skill="vba"></div>
+        </section>
+
+        <!-- 5) SQL -->
+        <section id="sql" class="section skill reveal" style="--accent-color:#00a2ff">
+            <header class="sec-head">
+                <h2>SQL</h2>
+                <p>Consultas, performance e modelagem de dados (MySQL/SQL Server).</p>
+            </header>
+            <div class="proj-grid" data-skill="sql"></div>
+        </section>
+
+        <!-- 6) JAVA -->
+        <section id="java" class="section skill reveal" style="--accent-color:#ff0000">
+            <header class="sec-head">
+                <h2>Java</h2>
+                <p>Desktop/FX iniciais, boas práticas e POO.</p>
+            </header>
+            <div class="proj-grid" data-skill="java"></div>
+        </section>
+
+        <!-- 7) PYTHON -->
+        <section id="python" class="section skill reveal" style="--accent-color:#f2c811">
+            <header class="sec-head">
+                <h2>Python</h2>
+                <p>Automação, dados e apps (PySide6/Streamlit).</p>
+            </header>
+            <div class="proj-grid" data-skill="python"></div>
+        </section>
+
+        <!-- 8) IA -->
+        <section id="ia" class="section skill reveal" style="--accent-color:#9000f0">
+            <header class="sec-head">
+                <h2>IA</h2>
+                <p>Geração de imagens, prompts e integrações.</p>
+            </header>
+            <div class="proj-grid" data-skill="ia"></div>
+        </section>
+
+        <!-- 9) REDES -->
+        <section id="redes" class="section skill reveal" style="--accent-color:#00a2ff">
+            <header class="sec-head">
+                <h2>Redes</h2>
+                <p>Infra básica, diagnósticos e melhorias.</p>
+            </header>
+            <div class="proj-grid" data-skill="redes"></div>
+        </section>
+
+        <!-- 10) PROCESSOS -->
+        <section id="process" class="section skill reveal" style="--accent-color:#ff0000">
+            <header class="sec-head">
+                <h2>Processos</h2>
+                <p>Mapeamento, padronização e melhoria contínua.</p>
+            </header>
+            <div class="proj-grid" data-skill="process"></div>
+        </section>
+
+        <!-- 11) CONTATO -->
+        <section id="contato" class="section contact reveal" style="--accent-color:#7c4dff">
+            <header class="sec-head">
+                <h2>Contato</h2>
+                <p>Tem alguma ideia de codigo?</p>
+            </header>
+            <form class="contact-form" onsubmit="return false;">
+                <input type="text" placeholder="Seu nome" required />
+                <input type="email" placeholder="Seu e-mail" required />
+                <textarea rows="5" placeholder="Sua mensagem"></textarea>
+                <button class="cta">Enviar</button>
+            </form>
+        </section>
+
+    </main>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // ---------- helpers ----------
+  function cap(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  }
+  function qs(sel, root) {
+    return (root || document).querySelector(sel);
+  }
+  function qsa(sel, root) {
+    return (root || document).querySelectorAll(sel);
+  }
+
+  // ---------- Navegação: link ativo ----------
+  var sections = qsa('section[id]');
+  var navLinks = qsa('.nav a');
+
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var id = entry.target.getAttribute('id');
+      var link = qs('.nav a[href="#' + id + '"]');
+      if (entry.isIntersecting) {
+        navLinks.forEach(function (a) { a.classList.remove('active'); });
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0.1 });
+
+  sections.forEach(function (sec) { spy.observe(sec); });
+
+  // ---------- Reveal-on-scroll ----------
+  var revealEls = qsa('.reveal, .card');
+  var revealer = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(function (el) { revealer.observe(el); });
+
+  // ---------- Smooth scroll (fallback) ----------
+  qsa('.nav a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // ---------- Carrega counts (embutido -> arquivo) ----------
+  function getCounts() {
+    return new Promise(function (resolve, reject) {
+      var emb = document.getElementById("counts");
+      if (emb) {
+        try {
+          var j = JSON.parse(emb.textContent);
+          console.log("[counts] usando JSON embutido");
+          resolve(j);
+          return;
+        } catch (e) {
+          console.warn("JSON embutido inválido:", e);
+        }
+      }
+      // tenta arquivos locais
+      var urls = ["data/counts.json", "WEB/data/counts.json"];
+      (function tryNext(i) {
+        if (i >= urls.length) {
+          reject(new Error("Não consegui carregar counts.json (embutido nem arquivo)."));
+          return;
+        }
+        fetch(urls[i], { cache: "no-store" })
+          .then(function (r) {
+            if (!r.ok) throw new Error(r.status + " " + r.statusText);
+            console.log("[counts] usando " + urls[i]);
+            return r.json();
+          })
+          .then(resolve)
+          .catch(function () { tryNext(i + 1); });
+      })(0);
+    });
+  }
+
+  // ---------- Render (1 card por subpasta) ----------
+  getCounts().then(function (json) {
+    var MAX = 50;
+    var skills = Array.isArray(json.skills) ? json.skills : [];
+    var dados = json.dados || {};
+
+    // garante .proj-grid em cada seção
+    skills.forEach(function (skill) {
+      var sec = document.getElementById(skill);
+      if (!sec) { console.warn("Seção ausente:", skill); return; }
+      var grid = qs('.proj-grid[data-skill="' + skill + '"]', sec);
+      if (!grid) {
+        grid = document.createElement("div");
+        grid.className = "proj-grid";
+        grid.setAttribute("data-skill", skill);
+        sec.appendChild(grid);
+      }
+    });
+
+    skills.forEach(function (skill) {
+      var sec = document.getElementById(skill);
+      if (!sec) return;
+      var grid = qs('.proj-grid[data-skill="' + skill + '"]', sec);
+      if (!grid) return;
+
+      var subpastas = Array.isArray(dados[skill] && dados[skill].pastas)
+        ? dados[skill].pastas : [];
+
+      // Badge "Projetos: N"
+      var chip = qs(".sec-head .count-inline", sec);
+      if (!chip) {
+        var h2 = qs(".sec-head h2", sec);
+        if (h2) {
+          chip = document.createElement("span");
+          chip.className = "count-inline";
+          h2.appendChild(chip);
+        }
+      }
+      if (chip) chip.textContent = "Projetos: " + subpastas.length;
+
+      grid.innerHTML = "";
+      subpastas.slice(0, MAX).forEach(function (nome) {
+        var el = document.createElement("article");
+        el.className = "proj-card";
+
+        var title = document.createElement("h3");
+        title.className = "proj-title";
+        title.setAttribute("title", nome);
+        title.textContent = nome;
+
+        var meta = document.createElement("p");
+        meta.className = "proj-meta";
+        meta.textContent = "Subpasta do projeto";
+
+        var actions = document.createElement("div");
+        actions.className = "proj-actions";
+
+        var btn = document.createElement("button");
+        btn.className = "proj-open";
+        btn.setAttribute("type", "button");
+        btn.textContent = "Abrir";
+
+        btn.addEventListener("click", function () {
+          // monta caminho relativo
+          var url = ".." + "/Projetos/" + cap(skill) + "/" + encodeURIComponent(nome) + "/";
+
+          // se for file://, normaliza base
+          if (location.protocol === "file:") {
+            var base = location.href.replace(/[^/]+$/, ""); // remove o arquivo atual
+            url = base + url;
+          }
+
+          try {
+            window.open(url, "_blank");
+          } catch (e) {
+            console.warn("Falha ao abrir:", url, e);
+          }
+        });
+
+        actions.appendChild(btn);
+        el.appendChild(title);
+        el.appendChild(meta);
+        el.appendChild(actions);
+        grid.appendChild(el);
+      });
+
+      console.log(skill + ": " + Math.min(subpastas.length, MAX) + " cards renderizados.");
+    });
+  }).catch(function (e) {
+    console.error(e);
+  });
+});
+
+</script>
+<script id="counts" type="application/json">
+{
+  "skills": [
+    "excel",
+    "powerbi",
+    "vba",
+    "sql",
+    "java",
+    "python",
+    "ia",
+    "redes",
+    "process"
+  ],
+  "dados": {
+    "excel": {
+      "quantidade_pastas": 11,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 2",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "powerbi": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "vba": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "sql": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "java": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "python": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "ia": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "redes": {
+      "quantidade_pastas": 20,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 10",
+        "EXEMPLO 11",
+        "EXEMPLO 12",
+        "EXEMPLO 13",
+        "EXEMPLO 14",
+        "EXEMPLO 15",
+        "EXEMPLO 16",
+        "EXEMPLO 17",
+        "EXEMPLO 18",
+        "EXEMPLO 19",
+        "EXEMPLO 2",
+        "EXEMPLO 20",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5",
+        "EXEMPLO 6",
+        "EXEMPLO 7",
+        "EXEMPLO 8",
+        "EXEMPLO 9"
+      ],
+      "arquivos": []
+    },
+    "process": {
+      "quantidade_pastas": 5,
+      "quantidade_arquivos": 0,
+      "pastas": [
+        "EXEMPLO 1",
+        "EXEMPLO 2",
+        "EXEMPLO 3",
+        "EXEMPLO 4",
+        "EXEMPLO 5"
+      ],
+      "arquivos": []
+    }
+  },
+  "total_geral": 156
+}
+</script>
+</body>
+
+</html>

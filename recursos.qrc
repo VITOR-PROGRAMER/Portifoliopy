@@ -1,0 +1,24 @@
+<RCC>
+  <qresource prefix="/imagens">
+    <file>imagens/logo.png</file>
+    <file>imagens/SKILL1.png</file>
+    <file>imagens/SKILL2.png</file>
+    <file>imagens/SKILL3.png</file>
+    <file>imagens/SKILL4.png</file>
+    <file>imagens/SKILL5.png</file>
+    <file>imagens/SKILL6.png</file>
+    <file>imagens/SKILL7.png</file>
+    <file>imagens/SKILL8.png</file>
+    <file>imagens/SKILL9.png</file>
+    <file>imagens/logo1.png</file>   
+    <file>imagens/logo2.png</file> 
+    <file>imagens/logo3.png</file> 
+    <file>imagens/logo4.png</file> 
+    <file>imagens/logo5.png</file> 
+    <file>imagens/logo6.png</file> 
+    <file>imagens/logo7.png</file> 
+    <file>imagens/logo8.png</file> 
+    <file>imagens/logo9.png</file>  
+  </qresource>
+</RCC>
+
